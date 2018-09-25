@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Google Cloud Next 18 Extended Tizi-Ouzou</title>
+</head>
+<body>
+    
+<script src="https://www.gstatic.com/firebasejs/5.5.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.5.1/firebase-firestore.js"></script>
+
+<script>
+
+/**
+ * 7 requêtes SQL traduit a des requêtes Cloud Firestore.
+ *
+ * @author Massiouen Bekhtiar " massiouenbekhtiar@gmail.com "
+ */
+
+// Initialisé Firebase
+var config = {
+    apiKey: "AIzaSyC38aKUcI32OcoTv17Tn7nNtWvyFpEVx8Y",
+    authDomain: "cloud-next-tiziouzou.firebaseapp.com",
+    projectId: "cloud-next-tiziouzou"
+  };
+firebase.initializeApp(config);
+
+// Initialiser Cloud Firestore à partir de Firebase
+var db = firebase.firestore();
+
+// Désactiver les fonctionnalités obsolètes
+db.settings({
+  timestampsInSnapshots: true
+});
+</script>
+
+<script>
+
+// Sélectionner un membre par son MID.
+// SQL Query : SELECT * FROM membres WHERE MID = "m_0012018"
+db.collection("membres").doc("m_0012018").get().then(function(doc) {
+    if(doc.exists){
+        console.log(doc.id, " => ", doc.data());
+    } else {
+        console.log("Document introuvable!");
+    }
+})
+.catch(function(erreur) {
+    console.log("Erreur lors de la récupération de document:", erreur);
+});
+
+//Trouver un membre par son nom
+// SQL Query : SELECT * FROM membres WHERE nom = "Kharaze"
+db.collection("membres").where("nom", "==", "Kharaze")
+    .get()
+    .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+        });
+    })
+    .catch(function(erreur) {
+        console.log("Erreur lors de la récupération de document:", erreur);
+    });
+
+//Trouver les 5 premiers membres
+// SQL Query : SELECT * FROM membres LIMIT 5
+db.collection("membres").limit(5).get()
+    .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+        });
+    })
+    .catch(function(erreur) {
+        console.log("Erreur lors de la récupération de document:", erreur);
+    });
+
+//Trouver les membres dans le nom commence par un "A"
+// SQL Query : SELECT * FROM membres WHERE nom LIKE "A%"
+db.collection("membres").orderBy("nom").startAt("A").get()
+    .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+        });
+    })
+    .catch(function(erreur) {
+        console.log("Erreur lors de la récupération de document:", erreur);
+    });
+
+//Trouver les membres dans l'age est moins de 25 ans
+// SQL Query : SELECT * FROM membres WHERE age <= 25
+db.collection("membres").orderBy("age").where("age", "<=", 25).get()
+    .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+        });
+    })
+    .catch(function(erreur) {
+        console.log("Erreur lors de la récupération de document:", erreur);
+    });
+
+//Trouver les membres dans l'age est superieur a 25ans
+// SQL Query : SELECT * FROM membres WHERE age >= 25
+db.collection("membres").orderBy("age").where("age", ">=", 25).get()
+    .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+        });
+    })
+    .catch(function(erreur) {
+        console.log("Erreur lors de la récupération de document:", erreur);
+    });
+
+//Trouver les membres dans l'age entre 15 ans et 50 ans
+// SQL Query : SELECT * FROM membres WHERE age >= 15 AND age <= 50
+
+db.collection("membres").orderBy("age").where("age", ">=", 15).where("age", "<=", 50).get()
+    .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+        });
+    })
+    .catch(function(erreur) {
+        console.log("Erreur lors de la récupération de document:", erreur);
+    });
+
+</script>
+</body>
+</html>
